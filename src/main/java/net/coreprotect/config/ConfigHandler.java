@@ -170,8 +170,7 @@ public class ConfigHandler extends Queue {
                 }
                 blfile.close();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -197,8 +196,7 @@ public class ConfigHandler extends Queue {
             ConfigHandler.prefix = Config.getGlobal().PREFIX;
 
             ConfigHandler.loadBlacklist(); // Load the blacklist file if it exists.
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -215,8 +213,7 @@ public class ConfigHandler extends Queue {
                 boolean canExecute = false;
                 try {
                     canExecute = tempFile.canExecute();
-                }
-                catch (Exception exception) {
+                } catch (Exception exception) {
                     // execute access denied by security manager
                 }
 
@@ -232,22 +229,20 @@ public class ConfigHandler extends Queue {
                 tempFile.delete();
 
                 Class.forName("org.sqlite.JDBC");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             HikariConfig config = new HikariConfig();
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 config.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 config.setDriverClassName("com.mysql.jdbc.Driver");
             }
 
-            config.setJdbcUrl("jdbc:mysql://" + ConfigHandler.host + ":" + ConfigHandler.port + "/" + ConfigHandler.database);
+            config.setJdbcUrl(
+                    "jdbc:mysql://" + ConfigHandler.host + ":" + ConfigHandler.port + "/" + ConfigHandler.database);
             config.setUsername(ConfigHandler.username);
             config.setPassword(ConfigHandler.password);
             config.setMaximumPoolSize(ConfigHandler.maximumPoolSize);
@@ -255,7 +250,10 @@ public class ConfigHandler extends Queue {
             config.addDataSourceProperty("characterEncoding", "UTF-8");
             config.addDataSourceProperty("connectionTimeout", "10000");
             /* https://github.com/brettwooldridge/HikariCP/wiki/MySQL-Configuration */
-            /* https://cdn.oreillystatic.com/en/assets/1/event/21/Connector_J%20Performance%20Gems%20Presentation.pdf */
+            /*
+             * https://cdn.oreillystatic.com/en/assets/1/event/21/Connector_J%20Performance%
+             * 20Gems%20Presentation.pdf
+             */
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -292,8 +290,7 @@ public class ConfigHandler extends Queue {
                 }
             }
             rs.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -316,8 +313,7 @@ public class ConfigHandler extends Queue {
                 }
             }
             rs.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -340,8 +336,7 @@ public class ConfigHandler extends Queue {
                 }
             }
             rs.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -364,8 +359,7 @@ public class ConfigHandler extends Queue {
                 }
             }
             rs.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -378,12 +372,13 @@ public class ConfigHandler extends Queue {
     }
 
     /**
-     * Unified method to reload cache from database when DATABASE_LOCK is false (multi-server setup)
+     * Unified method to reload cache from database when DATABASE_LOCK is false
+     * (multi-server setup)
      * 
      * @param type
-     *            The type of cache to reload
+     *             The type of cache to reload
      * @param name
-     *            The name to look up after reload
+     *             The name to look up after reload
      * @return The ID if found after reload, or -1 if not found
      */
     public static int reloadAndGetId(CacheType type, String name) {
@@ -423,8 +418,7 @@ public class ConfigHandler extends Queue {
                         return -1;
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -461,8 +455,7 @@ public class ConfigHandler extends Queue {
                     Queue.queueWorldInsert(id, worldname);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -478,7 +471,8 @@ public class ConfigHandler extends Queue {
                     locked = false;
                     unixtimestamp = (int) (System.currentTimeMillis() / 1000L);
                     int checkTime = unixtimestamp - 15;
-                    String query = "SELECT * FROM " + ConfigHandler.prefix + "database_lock WHERE rowid='1' AND status='1' AND time >= '" + checkTime + "' LIMIT 1";
+                    String query = "SELECT * FROM " + ConfigHandler.prefix
+                            + "database_lock WHERE rowid='1' AND status='1' AND time >= '" + checkTime + "' LIMIT 1";
                     ResultSet rs = statement.executeQuery(query);
                     while (rs.next()) {
                         if (unixtimestamp < waitTime) {
@@ -487,11 +481,13 @@ public class ConfigHandler extends Queue {
                                 lockMessage = true;
                             }
                             Thread.sleep(1000);
-                        }
-                        else {
-                            Chat.sendConsoleMessage(Color.RED + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_2));
-                            Chat.sendConsoleMessage(Color.GREY + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_3));
-                            Chat.sendConsoleMessage(Color.GREY + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_4));
+                        } else {
+                            Chat.sendConsoleMessage(
+                                    Color.RED + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_2));
+                            Chat.sendConsoleMessage(
+                                    Color.GREY + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_3));
+                            Chat.sendConsoleMessage(
+                                    Color.GREY + "[CoreProtect] " + Phrase.build(Phrase.DATABASE_LOCKED_4));
                             return false;
                         }
 
@@ -500,8 +496,7 @@ public class ConfigHandler extends Queue {
                     rs.close();
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -521,8 +516,7 @@ public class ConfigHandler extends Queue {
             if (startup) {
                 ListenerHandler.registerNetworking(); // Register channels for networking API
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -540,8 +534,7 @@ public class ConfigHandler extends Queue {
                 if (worldEditPlugin != null && worldEditPlugin.isEnabled()) {
                     VersionUtils.loadWorldEdit();
                 }
-            }
-            else if (ConfigHandler.worldeditEnabled) {
+            } else if (ConfigHandler.worldeditEnabled) {
                 VersionUtils.unloadWorldEdit();
             }
 
@@ -556,8 +549,7 @@ public class ConfigHandler extends Queue {
             statement.close();
 
             return validVersion && databaseLock;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -568,8 +560,7 @@ public class ConfigHandler extends Queue {
         try {
             Database.closeConnection();
             ListenerHandler.unregisterNetworking(); // Unregister channels for networking API
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
